@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Portfolio of Justin M Weaver — Web Multimedia Designer and Social Media Specialist." />
+  <title>Justin M Weaver — Web Multimedia Designer & Social Media Specialist</title>
+
+  <style>
+    /* ==========
+       Design system
+       ========== */
+    :root {
+      --primary: rgb(255, 204, 0);      /* r255 g204 b0 */
+      --alt: rgb(37, 15, 11);           /* r37 g15 b11 */
+      --text: #191919;
+      --muted: #5a5a5a;
+      --bg: #ffffff;
+      --grid: rgba(128,128,128,0.12);   /* faint grey grid */
+      --plate: rgba(0,0,0,0.8);         /* 80% opacity black */
+      --shadow: 0 10px 30px rgba(0,0,0,0.18);
+      --radius: 14px;
+      --maxw: 1100px;
+    }
+
+    /* Reset & base */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+    }
+
+    /* Top & bottom plates (50px thick, 80% opacity) */
+    .top-plate, .bottom-plate {
+      position: fixed;
+      left: 0; right: 0;
+      height: 50px;
+      background: var(--plate);
+      z-index: 999;
+      pointer-events: none;
+    }
+    .top-plate { top: 0; }
+    .bottom-plate { bottom: 0; }
+
+    /* Layout */
+    .wrap {
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 20px;
+      max-width: var(--maxw);
+    }
+
+    /* ==========
+       Header with responsive interlocking triangles + grid texture
+       ========== */
+    header {
+      position: relative;
+      padding-top: 100px;   /* clear top plate */
+      padding-bottom: 40px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    /* Faint grid texture behind triangles */
+    .grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(0deg, var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Interlocking triangles via SVG that expand/intersect */
+    .triangles {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      opacity: 0.5; /* 50% opacity */
+    }
+    .triangles svg {
+      width: 140%;
+      height: 140%;
+      position: absolute;
+      left: -20%;
+      top: -20%;
+      transition: transform 600ms ease;
+    }
+    /* Desktop default */
+    .triangles svg .tri-a { fill: var(--primary); }
+    .triangles svg .tri-b { fill: var(--alt); }
+
+    /* Motion on resize/hover for a modern feel */
+    header:hover .triangles svg { transform: scale(1.03) translateY(-4px); }
+
+    /* Header content */
+    .hero {
+      position: relative;
+      z-index: 2;
+    }
+    .branding {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .brand-mark {
+      width: 64px;
+      height: 64px;
+      position: relative;
+      flex: 0 0 auto;
+    }
+    /* Mini interlocking triangles in the logo mark */
+    .brand-mark svg { width: 100%; height: 100%; opacity: 0.5; }
+    .brand-mark .mini-a { fill: var(--primary); }
+    .brand-mark .mini-b { fill: var(--alt); }
+
+    .titleblock h1 {
+      font-size: clamp(28px, 4vw, 44px);
+      margin: 0;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+    .titleblock p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    /* Social buttons with dropdowns (alternating colors) */
+    .social-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .dropdown {
+      position: relative;
+      display: inline-flex;
+    }
+    .btn {
+      appearance: none;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .btn svg { width: 18px; height: 18px; }
+    /* Alternating colors */
+    .btn.alt-1 { background: var(--primary); color: #1b1b1b; }
+    .btn.alt-2 { background: var(--alt); }
+    .btn:focus-visible { outline: 3px solid rgba(0,0,0,0.2); outline-offset: 3px; }
+
+    .menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      min-width: 220px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 8px;
+      display: none;
+    }
+    .menu a {
+      display: grid;
+      grid-template-columns: 20px 1fr;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      color: var(--text);
+      text-decoration: none;
+      border-radius: 8px;
+    }
+    .menu a:hover { background: rgba(0,0,0,0.06); }
+    .dropdown[data-open="true"] .menu { display: block; }
+
+    /* ==========
+       Sections
+       ========== */
+    section {
+      position: relative;
+      padding: 48px 0;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+    }
+
+    /* About block with image + bio */
+    .about {
+      display: grid;
+      grid-template-columns: 1.1fr 1.6fr;
+      gap: 24px;
+    }
+    .about img {
+      width: 100%;
+      height: auto;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      object-fit: cover;
+    }
+
+    /* Work samples grid */
+    .samples {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .sample {
+      background: linear-gradient(135deg, var(--primary) 0%, #ffe58a 50%, #fff 100%);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .sample .thumb {
+      aspect-ratio: 16/10;
+      background:
+        linear-gradient(135deg, rgba(255,204,0,0.65), rgba(37,15,11,0.65)),
+        repeating-linear-gradient(0deg, var(--grid) 0, var(--grid) 1px, transparent 1px, transparent 24px),
+        repeating-linear-gradient(90deg, var(--grid) 0, var(--grid) 1px, transparent 1px, transparent 24px);
+    }
+    .sample .body { padding: 14px; }
+
+    /* Experience block */
+    .experience p { margin: 10px 0; }
+
+    /* Deep-dive block */
+    .deep-dive .columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .deep-dive .highlight {
+      background: linear-gradient(180deg, rgba(255,204,0,0.15), rgba(37,15,11,0.08));
+      border: 1px solid rgba(37,15,11,0.15);
+      border-radius: var(--radius);
+      padding: 18px;
+    }
+
+    /* Footer with interlocking triangles */
+    footer {
+      position: relative;
+      padding: 40px 0 100px; /* clear bottom plate */
+      overflow: hidden;
+      background: #fff;
+    }
+    footer .triangles { opacity: 0.5; }
+    .footer-content {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      gap: 8px;
+      text-align: center;
+    }
+    .footer-content a { color: var(--alt); font-weight: 600; text-decoration: none; }
+    .footer-content a:hover { text-decoration: underline; }
+
+    /* Responsive adjustments */
+    @media (max-width: 980px) {
+      .about { grid-template-columns: 1fr; }
+      .samples { grid-template-columns: 1fr 1fr; }
+      .deep-dive .columns { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .samples { grid-template-columns: 1fr; }
+      /* Swap triangle colors on small screens */
+      .triangles svg .tri-a { fill: var(--alt); }
+      .triangles svg .tri-b { fill: var(--primary); }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Top & bottom plates -->
+  <div class="top-plate" aria-hidden="true"></div>
+  <div class="bottom-plate" aria-hidden="true"></div>
+
+  <!-- ====== Header ====== -->
+  <header>
+    <div class="grid-bg" aria-hidden="true"></div>
+
+    <!-- Interlocking triangles background -->
+    <div class="triangles" aria-hidden="true">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+        <!-- Triangle A -->
+        <polygon class="tri-a" points="0,100 60,0 100,100"></polygon>
+        <!-- Triangle B -->
+        <polygon class="tri-b" points="0,0 40,100 100,0"></polygon>
+      </svg>
+    </div>
+
+    <div class="wrap hero">
+      <div class="branding">
+        <!-- Brand mark: two interlocking triangles (50% opacity) -->
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+            <polygon class="mini-a" points="10,90 55,10 90,90"></polygon>
+            <polygon class="mini-b" points="10,10 45,90 90,10"></polygon>
+          </svg>
+        </div>
+        <div class="titleblock">
+          <h1>Justin M Weaver</h1>
+          <p>Web Multimedia Designer & Social Media Specialist</p>
+        </div>
+      </div>
+
+      <!-- Social media dropdown buttons (with inline SVG icons) -->
+      <nav class="social-bar" aria-label="Social media">
+        <!-- Facebook -->
+        <div class="dropdown" data-open="false">
+          <button class="btn alt-1" aria-haspopup="true" aria-expanded="false">
+            <!-- Facebook icon -->
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M22 12a10 10 0 1 0-11.6 9.9v-7h-2.3V12h2.3V9.7c0-2.3 1.4-3.6 3.5-3.6 1 0 2 .2 2 .2v2.2h-1.1c-1.1 0-1.5.7-1.5 1.4V12h2.6l-.4 2.9h-2.2v7A10 10 0 0 0 22 12z"/></svg>
+            <span>Facebook</span>
+          </button>
+          <div class="menu" role="menu" aria-label="Facebook links">
+            <a href="#" role="menuitem">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="currentColor"/></svg>
+              <span>Profile</span>
+            </a>
+            <a href="#" role="menuitem">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect width="20" height="14" x="2" y="5" fill="currentColor"/></svg>
+              <span>Portfolio Page</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Twitter / X -->
+        <div class="dropdown" data-open="false">
+          <button class="btn alt-2" aria-haspopup="true" aria-expanded="false">
+            <!-- X icon -->
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M18 3L12.7 9.7 18.8 21h-3.2l-4-7-4.5 7H3l6.1-9.6L5.3 3h3.2l3.6 6 4.1-6H18z"/>
+            </svg>
+            <span>Twitter / X</span>
+          </button>
+          <div class="menu" role="menu" aria-label="X links">
+            <a href="#" role="menuitem">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="currentColor"/></svg>
+              <span>Profile</span>
+            </a>
+            <a href="#" role="menuitem">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect width="20" height="14" x="2" y="5" fill="currentColor"/></svg>
+              <span>Threads</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Reddit -->
+        <div class="dropdown" data-open="false">
+          <button class="btn alt-1" aria-haspopup="true" aria-expanded="false">
+            <!-- Reddit icon -->
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M14.2 3.6l2.7.6a2.7 2.7 0 1 1-.3 5c-.7 1.1-2.6 2.1-4.6 2.3-2.1.2-4.4-.4-5.6-1.4a2.7 2.7 0 1 1 0-3.7l.6-.4a6.3 6.3 0 0 1 4.8-1.7l.6-2.3 1.8.6zM7.8 13.4c.8 1.4 2.8 2.4 4.8 2.2 1.9-.2 3.8-1.3 4.5-2.6"/>
+            </svg>
+            <span>Reddit</span>
+          </button>
+          <div class="menu" role="menu" aria-label="Reddit links">
+            <a href="#" role="menuitem">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="currentColor"/></svg>
+              <span>Profile</span>
+            </a>
+            <a href="#" role="menuitem">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect width="20" height="14" x="2" y="5" fill="currentColor"/></svg>
+              <span>Case Studies</span>
+            </a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ====== Block 1: Image + Biography ====== -->
+    <section id="about">
+      <div class="wrap card about">
+        <!-- Replace src with your uploaded S3 image URL -->
+        <img id="profile-photo" src="assets/justin-profile.jpg" alt="Portrait of Justin M Weaver" />
+        <div>
+          <h2>About Justin</h2>
+          <p>Grew up in Southern New Jersey with a passion for art, photography, and computer graphics. Loving father of one child, with a wife of 19 years who also enjoys art and photography.</p>
+          <p>Web Multimedia Designer and Social Media Specialist, blending creative direction with technical depth. I design experiences that feel modern, purposeful, and measurable.</p>
+          <div class="social-bar" aria-label="Primary actions">
+            <div class="dropdown" data-open="false">
+              <button class="btn alt-2" aria-haspopup="true" aria-expanded="false">
+                <span>Quick actions</span>
+              </button>
+              <div class="menu" role="menu" aria-label="Quick actions">
+                <a href="#" role="menuitem"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 12h18"/></svg><span>Contact</span></a>
+                <a href="#" role="menuitem"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3v18"/></svg><span>Download résumé</span></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== Work samples ====== -->
+    <section id="work">
+      <div class="wrap">
+        <h2>Selected work</h2>
+        <p class="muted">Using the signature palette and grid-textured overlays to echo brand consistency.</p>
+        <div class="samples">
+          <!-- Design example placeholders (replace with S3-hosted images) -->
+          <article class="sample">
+            <div class="thumb" aria-hidden="true"></div>
+            <div class="body">
+              <h3>Campaign microsite</h3>
+              <p>Conversion-focused landing with analytics instrumentation and social remarketing hooks.</p>
+            </div>
+          </article>
+          <article class="sample">
+            <div class="thumb" aria-hidden="true"></div>
+            <div class="body">
+              <h3>Brand content system</h3>
+              <p>Reusable component library across web, social, and email for rapid iteration.</p>
+            </div>
+          </article>
+          <article class="sample">
+            <div class="thumb" aria-hidden="true"></div>
+            <div class="body">
+              <h3>Social ad set</h3>
+              <p>A/B creative with automated budget reallocation driven by performance signals.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== Experience details ====== -->
+    <section id="experience">
+      <div class="wrap card experience">
+        <h2>Experience & education</h2>
+        <p><strong>10 years</strong> of experience in web design and <strong>5 years</strong> as a Social Media Specialist.</p>
+        <p><strong>Graduate:</strong> Rowan College of South Jersey — Associate’s in Interactive Multimedia.</p>
+        <p><strong>Graduate:</strong> Wilmington University — Multimedia Designer, where my passion for computers and design expanded into computer technology, networking, game design, cybersecurity, programming, and database infrastructure — leaving no stone unturned in the computer world.</p>
+      </div>
+    </section>
+
+    <!-- ====== Deep dive: Social media, AI, and modern integration ====== -->
+    <section id="insights">
+      <div class="wrap deep-dive">
+        <h2>Social media, AI, and next‑gen multimedia integration</h2>
+        <div class="columns">
+          <div class="highlight">
+            <h3>Why social media matters</h3>
+            <p>Social media is the fastest feedback loop between brands and audiences. It discovers your corner of the internet by aligning content, cadence, and community with real business goals. It’s measurable, iterative, and the heartbeat of discoverability.</p>
+            <p>Utilizing tools like scheduling suites, social listening, and analytics, we expand reach, enhance marketing, and convert attention into outcomes. The game is consistency with intent — stories that travel and systems that learn.</p>
+          </div>
+          <div class="highlight">
+            <h3>AI in the creative workflow</h3>
+            <p>Artificial intelligence augments ideation, production, and optimization. From generative assets to audience clustering and copy refinement, AI removes friction and reveals patterns you can act on. The result: faster iteration, higher relevance, and better ROI.</p>
+            <p>Multimedia design, web design, and AI together are leading the next generation of technology. Embracing these tools means building modular systems that test, learn, and scale — where creativity is amplified and productivity compounds.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== Future features ====== -->
+    <section id="future">
+      <div class="wrap card">
+        <h2>Modern features ready to expand</h2>
+        <ul>
+          <li><strong>Login:</strong> Placeholder for an auth page (link-ready for future integration).</li>
+          <li><strong>Clickable buttons:</strong> Navigation hooks to additional pages and dashboards.</li>
+          <li><strong>Analytics-ready:</strong> Clean semantics and components to attach measurement and A/B testing.</li>
+          <li><strong>Cloud hosting:</strong> Built to deploy on Amazon Web Services S3 for scalable static hosting.</li>
+        </ul>
+        <div style="margin-top: 10px;" class="social-bar">
+          <a class="btn alt-1" href="#" role="button">Login</a>
+          <a class="btn alt-2" href="#" role="button">Portfolio</a>
+          <a class="btn alt-1" href="#" role="button">Services</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ====== Footer ====== -->
+  <footer>
+    <div class="grid-bg" aria-hidden="true"></div>
+    <div class="triangles" aria-hidden="true">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+        <polygon class="tri-a" points="0,100 50,10 100,100"></polygon>
+        <polygon class="tri-b" points="10,0 90,0 50,90"></polygon>
+      </svg>
+    </div>
+
+    <div class="wrap footer-content">
+      <p><strong>Justin M Weaver</strong></p>
+      <p><a href="mailto:JustinMWeaver@outlook.com">JustinMWeaver@outlook.com</a></p>
+      <p>Multimedia Designer & Social Media Specialist</p>
+    </div>
+  </footer>
+
+  <script>
+    // Accessible dropdown toggles
+    document.querySelectorAll('.dropdown .btn').forEach((btn) => {
+      const dropdown = btn.closest('.dropdown');
+      const menu = dropdown.querySelector('.menu');
+
+      const toggle = (open) => {
+        dropdown.dataset.open = open ? 'true' : 'false';
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      };
+
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = dropdown.dataset.open === 'true';
+        toggle(!isOpen);
+      });
+
+      // Close when clicking outside
+      document.addEventListener('click', () => toggle(false));
+      // Close on Escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') toggle(false);
+      });
+      // Trap focus basic
+      menu.addEventListener('keydown', (e) => {
+        const items = Array.from(menu.querySelectorAll('a'));
+        const idx = items.indexOf(document.activeElement);
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          (items[idx + 1] || items[0]).focus();
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          (items[idx - 1] || items[items.length - 1]).focus();
+        }
+      });
+    });
+  </script>
+
+  <!--
+    Deployment notes (AWS S3):
+    1. Create an S3 bucket (enable static website hosting) and upload this file as index.html.
+    2. Upload your images (e.g., /assets/justin-profile.jpg) and set public-read where appropriate.
+    3. Configure bucket policy and set index.html as the entry document.
+    4. Optionally place CloudFront in front for HTTPS, caching, and custom domains.
+
+    Image placeholders:
+    - Replace assets/justin-profile.jpg with your actual portrait image stored on S3.
+    - Replace sample thumbnail blocks with your design examples and add descriptions in the .body areas.
+
+    Social logos:
+    - Inline SVG icons are embedded to avoid external dependencies and align with “use logos found on the internet” intent.
+    - If you prefer official brand SVGs, replace the inline paths with brand-provided assets and ensure contrast/accessibility.
+  -->
+</body>
+</html>
