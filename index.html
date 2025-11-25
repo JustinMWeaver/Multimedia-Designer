@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Portfolio of Justin M Weaver — Web Multimedia Designer and Social Media Specialist." />
+  <title>Justin M Weaver — Web Multimedia Designer & Social Media Specialist</title>
+
+  <style>
+    /* ==========
+       Design system
+       ========== */
+    :root {
+      --primary: rgb(255, 204, 0);
+      --alt: rgb(37, 15, 11);
+      --text: #191919;
+      --muted: #5a5a5a;
+      --bg: #ffffff;
+      --grid: rgba(128,128,128,0.12);
+      --plate: rgba(0,0,0,0.8);
+      --shadow: 0 10px 30px rgba(0,0,0,0.18);
+      --radius: 14px;
+      --maxw: 1100px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+    }
+
+    .top-plate, .bottom-plate {
+      position: fixed;
+      left: 0; right: 0;
+      height: 50px;
+      background: var(--plate);
+      z-index: 999;
+      pointer-events: none;
+    }
+    .top-plate { top: 0; }
+    .bottom-plate { bottom: 0; }
+
+    .wrap {
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 20px;
+      max-width: var(--maxw);
+    }
+
+    header {
+      position: relative;
+      padding-top: 100px;
+      padding-bottom: 40px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(0deg, var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .triangles {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      opacity: 0.5;
+    }
+    .triangles svg {
+      width: 140%;
+      height: 140%;
+      position: absolute;
+      left: -20%;
+      top: -20%;
+      transition: transform 600ms ease;
+    }
+    .triangles svg .tri-a { fill: var(--primary); }
+    .triangles svg .tri-b { fill: var(--alt); }
+    header:hover .triangles svg { transform: scale(1.03) translateY(-4px); }
+
+    .hero { position: relative; z-index: 2; }
+    .branding {
+      display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-bottom: 18px;
+    }
+    .brand-mark { width: 64px; height: 64px; position: relative; flex: 0 0 auto; }
+    .brand-mark svg { width: 100%; height: 100%; opacity: 0.5; }
+    .brand-mark .mini-a { fill: var(--primary); }
+    .brand-mark .mini-b { fill: var(--alt); }
+
+    .titleblock h1 { font-size: clamp(28px, 4vw, 44px); margin: 0; font-weight: 800; letter-spacing: 0.5px; }
+    .titleblock p { margin: 4px 0 0; color: var(--muted); font-weight: 600; }
+
+    .social-bar { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
+    .dropdown { position: relative; display: inline-flex; }
+    .btn {
+      appearance: none; border: none; padding: 10px 14px; border-radius: 999px;
+      display: inline-flex; align-items: center; gap: 10px; color: #fff;
+      box-shadow: var(--shadow); cursor: pointer; font-weight: 600;
+    }
+    .btn svg { width: 18px; height: 18px; }
+    .btn.alt-1 { background: var(--primary); color: #1b1b1b; }
+    .btn.alt-2 { background: var(--alt); }
+    .btn:focus-visible { outline: 3px solid rgba(0,0,0,0.2); outline-offset: 3px; }
+
+    .menu {
+      position: absolute; top: calc(100% + 6px); left: 0; min-width: 220px;
+      background: #fff; border-radius: 12px; box-shadow: var(--shadow); padding: 8px; display: none;
+    }
+    .menu a {
+      display: grid; grid-template-columns: 20px 1fr; align-items: center; gap: 10px;
+      padding: 10px 12px; color: var(--text); text-decoration: none; border-radius: 8px;
+    }
+    .menu a:hover { background: rgba(0,0,0,0.06); }
+    .dropdown[data-open="true"] .menu { display: block; }
+
+    section { position: relative; padding: 48px 0; }
+    .card { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px; }
+
+    .about { display: grid; grid-template-columns: 1.1fr 1.6fr; gap: 24px; }
+    .about img { width: 100%; height: auto; border-radius: var(--radius); box-shadow: var(--shadow); object-fit: cover; }
+
+    .samples { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .sample { background: linear-gradient(135deg, var(--primary) 0%, #ffe58a 50%, #fff 100%); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+    .sample .thumb { aspect-ratio: 16/10; background: linear-gradient(135deg, rgba(255,204,0,0.65), rgba(37,15,11,0.65)); }
+    .sample .body { padding: 14px; }
+
+    .experience p { margin: 10px 0; }
+
+    .deep-dive .columns { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .deep-dive .highlight { background: linear-gradient(180deg, rgba(255,204,0,0.15), rgba(37,15,11,0.08)); border: 1px solid rgba(37,15,11,0.15); border-radius: var(--radius); padding: 18px; }
+
+    footer { position: relative; padding: 40px 0 100px; overflow: hidden; background: #fff; }
+    footer .triangles { opacity: 0.5; }
+    .footer-content { position: relative; z-index: 2; display: grid; gap: 8px; text-align: center; }
+    .footer-content a { color: var(--alt); font-weight: 600; text-decoration: none; }
+    .footer-content a:hover { text-decoration: underline; }
+
+    @media (max-width: 980px) {
+      .about { grid-template-columns: 1fr; }
+      .samples { grid-template-columns: 1fr 1fr; }
+      .deep-dive .columns { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 560px) {
+      .samples { grid-template-columns: 1fr; }
+      .triangles svg .tri-a { fill: var(--alt); }
+      .triangles svg .tri-b { fill: var(--primary); }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="top-plate" aria-hidden="true"></div>
+  <div class="bottom-plate" aria-hidden="true"></div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="grid-bg" aria-hidden="true"></div>
+    <div class="triangles" aria-hidden="true">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+        <
